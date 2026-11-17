@@ -62,12 +62,9 @@ const FontStyles: React.FC = () => {
   return <style dangerouslySetInnerHTML={{__html: faces}} />;
 };
 
-const lineFontSize = (text: string) => {
-  const n = text.length;
-  if (n <= 26) return 84;
-  if (n <= 40) return 66;
-  return 56;
-};
+const LYRIC_FONT_SIZE = 56;
+const SLOT_GAP = 96;
+const LAST_END = Math.max(...LINES.map((l) => l.end));
 
 const PulsingFlash: React.FC<{t: number; at: number}> = ({t, at}) => {
   const d = t - at;
@@ -94,8 +91,18 @@ export const MillionReasons: React.FC = () => {
   const imgX = -34 * kenBurns;
 
   const fadeIn = range(t, 0, 0.6);
-  const fadeOut = 1 - range(t, 26.6, DURATION);
+  const fadeOut = 1 - range(t, 27.25, DURATION);
   const masterOpacity = Math.min(fadeIn, fadeOut);
+
+  const frameStart = LAST_END + 0.05;
+  const haloP = smooth(range(t, frameStart, frameStart + 1.35));
+  const stampP = smooth(range(t, frameStart + 0.4, frameStart + 1.0));
+  const postPulse =
+    t > LAST_END ? Math.exp(-(t - LAST_END) * 2.4) : 0;
+  const breath =
+    t > LAST_END
+      ? 1 + 0.012 * Math.sin(clamp01((t - LAST_END) / 1.1) * Math.PI)
+      : 1;
 
   const grainOpacity = 0.05 + 0.022 * Math.sin(frame * 1.7) * Math.sin(frame * 0.7 + 1.3);
 
@@ -141,6 +148,18 @@ export const MillionReasons: React.FC = () => {
       {/* === Golden flashes on the two hook lines === */}
       <PulsingFlash t={t} at={15.17} />
       <PulsingFlash t={t} at={22.13} />
+
+      {/* === Completion halo: warm light bloom behind the finished verse === */}
+      {haloP > 0.001 && (
+        <AbsoluteFill
+          style={{
+            opacity: haloP * 0.5,
+            background:
+              'radial-gradient(64% 58% at 68% 53%, rgba(255,208,124,0.36) 0%, rgba(233,162,72,0.17) 40%, transparent 76%)',
+            mixBlendMode: 'screen',
+          }}
+        />
+      )}
 
       {/* === Dust motes / gold sparks === */}
       {MOTES.map((m, i) => {
@@ -189,15 +208,17 @@ export const MillionReasons: React.FC = () => {
           right: 160,
           top: 0,
           bottom: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          paddingTop: 132,
-          paddingBottom: 92,
         }}
       >
         {/* ---- Title block ---- */}
-        <div>
+        <div
+          style={{
+            position: 'absolute',
+            top: 132,
+            left: 0,
+            right: 0,
+          }}
+        >
           <div
             style={{
               fontFamily: "'Jost', sans-serif",
@@ -249,71 +270,34 @@ export const MillionReasons: React.FC = () => {
                 'linear-gradient(90deg,rgba(233,200,132,0.65) 0%,transparent 100%)',
             }}
           />
-          <div
-            style={{
-              marginTop: 22,
-              fontFamily: "'Jost', sans-serif",
-              fontWeight: 300,
-              fontSize: 19,
-              letterSpacing: '0.42em',
-              color: '#cbb27f',
-              opacity: 0.72,
-            }}
-          >
-            JOANNE&nbsp;&nbsp;·&nbsp;&nbsp;2016
-          </div>
         </div>
 
-        {/* ---- Lyrics (teleprompter reel) ---- */}
+        {/* ---- Lyrics (postcard stack) ---- */}
         <div
           style={{
-            position: 'relative',
-            width: '100%',
-            height: 600,
+            position: 'absolute',
+            top: 620,
+            left: 0,
+            right: 0,
+            height: 580,
+            filter:
+              postPulse > 0.01
+                ? `drop-shadow(0 0 ${26 * postPulse}px rgba(255,205,110,${0.8 * postPulse}))`
+                : 'none',
+            transform: `scale(${breath})`,
+            transformOrigin: '50% 55%',
           }}
         >
-          {(() => {
-            const nextIdx = LINES.findIndex((l) => l.start > ktime);
-            return LINES.map((line, li) => {
+          {LINES.map((line, li) => {
             const start = line.start;
-            const end = line.end;
 
-            const inP = smooth(range(ktime, start, start + 0.3));
-            const dyingP = range(ktime, end, end + 0.52);
-            const outP = 1 - dyingP;
-            const anticipation =
-              ktime < start ? smooth(range(ktime, start - 2.6, start - 0.35)) : 1;
-
-            let opacity = 0;
-            let offset = 0;
-            let blur = 0;
-            let scale = 1;
-            let z = 1;
-
-            if (ktime < start) {
-              if (li !== nextIdx) return null;
-              opacity = 0.16 + 0.2 * anticipation;
-              offset = Math.min(190, (start - ktime) * 78);
-              scale = 0.92;
-              z = 1;
-            } else if (ktime <= end) {
-              opacity = inP;
-              offset = 0;
-              scale = 0.95 + 0.05 * inP;
-              z = 3;
-            } else if (dyingP < 1) {
-              opacity = outP;
-              offset = -165 * smooth(dyingP);
-              blur = 4 * smooth(dyingP);
-              scale = 1;
-              z = 2;
-            } else {
-              opacity = 0;
-            }
+            const inP = smooth(range(ktime, start - 0.42, start + 0.05));
+            const slotOffset = (1 - inP) * 150;
+            const opacity = inP;
 
             if (opacity <= 0.004) return null;
 
-            const fontSize = lineFontSize(line.text);
+            const slotY = (li - (LINES.length - 1) / 2) * SLOT_GAP;
 
             return (
               <div
@@ -321,15 +305,13 @@ export const MillionReasons: React.FC = () => {
                 style={{
                   position: 'absolute',
                   left: 0,
-                  top: `calc(50% + ${offset}px)`,
+                  top: `calc(50% + ${slotY + slotOffset}px)`,
                   width: '100%',
-                  zIndex: z,
                   opacity,
-                  transform: `translateY(-50%) scale(${scale})`,
-                  filter: blur > 0.05 ? `blur(${blur}px)` : 'none',
+                  transform: `translateY(-50%) scale(${0.965 + 0.035 * inP})`,
                   fontFamily: "'Playfair Display', serif",
                   fontWeight: 600,
-                  fontSize,
+                  fontSize: LYRIC_FONT_SIZE,
                   lineHeight: 1.22,
                   letterSpacing: '0.008em',
                   color: CREAM,
@@ -356,7 +338,7 @@ export const MillionReasons: React.FC = () => {
                           color: 'transparent',
                           textShadow: current
                             ? `0 0 24px rgba(255,206,116,${0.5 + 0.45 * bump}), 0 0 64px rgba(255,152,54,${0.4 * bump})`
-                            : '0 0 15px rgba(255,192,96,0.32)',
+                            : `0 0 ${15 + 22 * postPulse}px rgba(255,192,96,${0.32 + 0.45 * postPulse})`,
                         }
                       : {
                           color: 'rgba(247,236,217,0.30)',
@@ -370,12 +352,18 @@ export const MillionReasons: React.FC = () => {
                 })}
               </div>
             );
-            });
-          })()}
+          })}
         </div>
 
         {/* ---- Progress hairline + credit ---- */}
-        <div>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 92,
+            left: 0,
+            right: 0,
+          }}
+        >
           <div
             style={{
               position: 'relative',
@@ -417,6 +405,93 @@ export const MillionReasons: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* === Postage stamp seal (top-right) === */}
+      {stampP > 0.001 && (
+        <div
+          style={{
+            position: 'absolute',
+            left: 2212,
+            top: 647,
+            width: 158,
+            height: 188,
+            opacity: stampP * 0.94,
+            transform: `rotate(-3deg) scale(${0.82 + 0.18 * stampP})`,
+            transformOrigin: '50% 50%',
+            border: '1.6px solid rgba(230,196,140,0.9)',
+            boxShadow: '0 0 26px rgba(230,196,140,0.28), inset 0 0 18px rgba(230,196,140,0.14)',
+            background: 'rgba(18,5,9,0.62)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px 10px',
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              border: '1px dashed rgba(230,196,140,0.55)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "'Jost', sans-serif",
+                fontWeight: 400,
+                fontSize: 12,
+                letterSpacing: '0.4em',
+                color: '#cbb27f',
+                paddingLeft: '0.4em',
+              }}
+            >
+              JOANNE
+            </div>
+            <div
+              style={{
+                fontFamily: "'Bodoni Moda', serif",
+                fontWeight: 800,
+                fontSize: 29,
+                lineHeight: 1.08,
+                textAlign: 'center',
+                backgroundImage:
+                  'linear-gradient(172deg,#fdf6e3 0%,#e9cda0 45%,#a9834e 100%)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
+            >
+              MILLION
+              <br />
+              REASONS
+            </div>
+            <div
+              style={{
+                width: 56,
+                height: 1,
+                background: 'linear-gradient(90deg,transparent,#e6c48c,transparent)',
+              }}
+            />
+            <div
+              style={{
+                fontFamily: "'Jost', sans-serif",
+                fontWeight: 300,
+                fontSize: 12,
+                letterSpacing: '0.32em',
+                color: '#e6c48c',
+                paddingLeft: '0.32em',
+              }}
+            >
+              MMXVI
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* === Global fade === */}
       <AbsoluteFill
