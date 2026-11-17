@@ -1,0 +1,269 @@
+[
+  {
+    "text": "I bow down to pray",
+    "start": 1.483,
+    "end": 4.31,
+    "words": [
+      {
+        "w": "I",
+        "start": 1.483,
+        "end": 1.583
+      },
+      {
+        "w": "bow",
+        "start": 1.683,
+        "end": 2.044
+      },
+      {
+        "w": "down",
+        "start": 2.084,
+        "end": 3.488
+      },
+      {
+        "w": "to",
+        "start": 3.528,
+        "end": 3.608
+      },
+      {
+        "w": "pray",
+        "start": 3.708,
+        "end": 4.31
+      }
+    ]
+  },
+  {
+    "text": "I try to make the worst seem better",
+    "start": 4.711,
+    "end": 7.388,
+    "words": [
+      {
+        "w": "I",
+        "start": 4.711,
+        "end": 4.772
+      },
+      {
+        "w": "try",
+        "start": 4.832,
+        "end": 5.174
+      },
+      {
+        "w": "to",
+        "start": 5.194,
+        "end": 5.335
+      },
+      {
+        "w": "make",
+        "start": 5.356,
+        "end": 5.557
+      },
+      {
+        "w": "the",
+        "start": 5.597,
+        "end": 5.798
+      },
+      {
+        "w": "worst",
+        "start": 5.839,
+        "end": 6.241
+      },
+      {
+        "w": "seem",
+        "start": 6.281,
+        "end": 6.644
+      },
+      {
+        "w": "better",
+        "start": 6.744,
+        "end": 7.388
+      }
+    ]
+  },
+  {
+    "text": "Lord, show me the way",
+    "start": 7.871,
+    "end": 11.5,
+    "words": [
+      {
+        "w": "Lord,",
+        "start": 7.871,
+        "end": 8.933
+      },
+      {
+        "w": "show",
+        "start": 9.074,
+        "end": 9.495
+      },
+      {
+        "w": "me",
+        "start": 9.575,
+        "end": 10.858
+      },
+      {
+        "w": "the",
+        "start": 10.898,
+        "end": 11.079
+      },
+      {
+        "w": "way",
+        "start": 11.139,
+        "end": 11.5
+      }
+    ]
+  },
+  {
+    "text": "To cut through all his worn out leather",
+    "start": 12.061,
+    "end": 14.508,
+    "words": [
+      {
+        "w": "To",
+        "start": 12.061,
+        "end": 12.162
+      },
+      {
+        "w": "cut",
+        "start": 12.222,
+        "end": 12.442
+      },
+      {
+        "w": "through",
+        "start": 12.482,
+        "end": 12.743
+      },
+      {
+        "w": "all",
+        "start": 12.884,
+        "end": 12.984
+      },
+      {
+        "w": "his",
+        "start": 13.024,
+        "end": 13.144
+      },
+      {
+        "w": "worn",
+        "start": 13.204,
+        "end": 13.606
+      },
+      {
+        "w": "out",
+        "start": 13.846,
+        "end": 13.987
+      },
+      {
+        "w": "leather",
+        "start": 14.007,
+        "end": 14.508
+      }
+    ]
+  },
+  {
+    "text": "I've got a hundred million reasons to walk away",
+    "start": 15.17,
+    "end": 20.145,
+    "words": [
+      {
+        "w": "I've",
+        "start": 15.17,
+        "end": 15.872
+      },
+      {
+        "w": "got",
+        "start": 15.992,
+        "end": 16.494
+      },
+      {
+        "w": "a",
+        "start": 16.735,
+        "end": 16.895
+      },
+      {
+        "w": "hundred",
+        "start": 16.975,
+        "end": 17.738
+      },
+      {
+        "w": "million",
+        "start": 17.818,
+        "end": 18.62
+      },
+      {
+        "w": "reasons",
+        "start": 18.761,
+        "end": 19.423
+      },
+      {
+        "w": "to",
+        "start": 19.463,
+        "end": 19.603
+      },
+      {
+        "w": "walk",
+        "start": 19.664,
+        "end": 19.944
+      },
+      {
+        "w": "away",
+        "start": 19.964,
+        "end": 20.145
+      }
+    ]
+  },
+  {
+    "text": "But baby, I just need one good one to stay",
+    "start": 22.131,
+    "end": 26.258,
+    "words": [
+      {
+        "w": "But",
+        "start": 22.131,
+        "end": 22.291
+      },
+      {
+        "w": "baby,",
+        "start": 22.411,
+        "end": 22.912
+      },
+      {
+        "w": "I",
+        "start": 23.052,
+        "end": 23.152
+      },
+      {
+        "w": "just",
+        "start": 23.173,
+        "end": 23.333
+      },
+      {
+        "w": "need",
+        "start": 23.413,
+        "end": 23.774
+      },
+      {
+        "w": "one",
+        "start": 24.074,
+        "end": 24.234
+      },
+      {
+        "w": "good",
+        "start": 24.315,
+        "end": 24.695
+      },
+      {
+        "w": "one",
+        "start": 24.956,
+        "end": 25.176
+      },
+      {
+        "w": "to",
+        "start": 25.256,
+        "end": 25.497
+      },
+      {
+        "w": "stay",
+        "start": 25.577,
+        "end": 26.258
+      }
+    ]
+  }
+]
